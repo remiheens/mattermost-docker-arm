@@ -33,4 +33,5 @@ services:
       - MM_PASSWORD=
       - MM_DBNAME=
       - MM_SQLSETTINGS_DATASOURCE=postgres://<USER>:<PASSWORD>@<DB SERVICE NAME>:<PASSWORD>/<DB NAME>?sslmode=disable&connect_timeout=10
+      - MM_SERVICESETTINGS_SITEURL=http://localhost/
       #- MM_CONFIG=/mattermost/config/config.json
