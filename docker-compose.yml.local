@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  db:
+    build: db
+    read_only: true
+    restart: unless-stopped
+    volumes:
+      - ./volumes/db/var/lib/postgresql/data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - POSTGRES_USER=
+      - POSTGRES_PASSWORD=
+      - POSTGRES_DB=
+  app:
+    build:
+      context: app
+      args:
+         - edition=team
+         - PUID=1000
+         - PGID=1000
+         - MM_VERSION=7.5.2
+    restart: unless-stopped
+    volumes:
+      - ./volumes/app/mattermost/config:/mattermost/config:rw
+      - ./volumes/app/mattermost/data:/mattermost/data:rw
+      - ./volumes/app/mattermost/logs:/mattermost/logs:rw
+      - ./volumes/app/mattermost/plugins:/mattermost/plugins:rw
+      - ./volumes/app/mattermost/client-plugins:/mattermost/client/plugins:rw
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - MM_USERNAME=
+      - MM_PASSWORD=
+      - MM_DBNAME=
+      - MM_SQLSETTINGS_DATASOURCE=postgres://<USER>:<PASSWORD>@<DB SERVICE NAME>:<PASSWORD>/<DB NAME>?sslmode=disable&connect_timeout=10
+      #- MM_CONFIG=/mattermost/config/config.json
