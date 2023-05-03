@@ -116,7 +116,7 @@ make --directory="${HOME}/go/src/github.com/mattermost/mattermost-webapp" \
 	build
 # build Mattermost server
 patch --directory="${HOME}/go/src/github.com/mattermost/mattermost-server" \
-	--strip=1 -t < "${HOME}/build/build-release.patch"
+	--strip=1 -t < "${HOME}/build-release.patch"
 sed -i \
 	-e 's#go generate#env --unset=GOOS --unset=GOARCH go generate#' \
 	-e 's#$(GO) generate#env --unset=GOOS --unset=GOARCH go generate#' \
