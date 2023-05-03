@@ -2,7 +2,6 @@ name: Docker build and Publish
 on:
   push:
     tags:
-      - *
 
 env:
   DEBIAN_RELEASE: buster
