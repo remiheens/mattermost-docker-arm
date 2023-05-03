@@ -2,6 +2,7 @@ name: Docker build and Publish
 on:
   push:
     tags:
+     - v*
 
 env:
   DEBIAN_RELEASE: buster
@@ -39,4 +40,4 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/mattermost-${{ matrix.image }}:latest
           build-args:
-            - MM_VERSION=${GITHUB_REF#refs/*/}
+            - MM_VERSION=${{ github.ref_name }}
