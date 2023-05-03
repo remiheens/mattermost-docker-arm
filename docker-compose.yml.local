@@ -16,7 +16,6 @@ services:
     build:
       context: app
       args:
-         - edition=team
          - PUID=1000
          - PGID=1000
          - MM_VERSION=7.5.2
