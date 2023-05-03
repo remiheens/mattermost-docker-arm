@@ -12,3 +12,7 @@ I found a GitHub repository who built tar.gz release with a sourcecode that ca b
 1. Adapt environnement values
 1. Up the stack ’docker-compose up -d’
 1. Go to http://localhost:8000
+
+# Credits 
+
+Original repository for source code : https://github.com/SmartHoneybee/ubiquitous-memory
