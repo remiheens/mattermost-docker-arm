@@ -6,4 +6,4 @@ updates:
     interval: daily
     time: "00:15"
   open-pull-requests-limit: 99
-  target-branch: master
+  target-branch: main
