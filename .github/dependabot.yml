@@ -1,0 +1,9 @@
+version: 2
+updates:
+- package-ecosystem: gomod
+  directory: "/dependabot"
+  schedule:
+    interval: daily
+    time: "00:15"
+  open-pull-requests-limit: 99
+  target-branch: main

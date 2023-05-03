@@ -1,0 +1,68 @@
+name: Package and release
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  DEBIAN_RELEASE: buster
+  DOCKER_PWD: /root
+  DOCKER_IMAGE: debian:${DEBIAN_RELEASE}
+  GO_VERSION: 1.18.1
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - os: linux
+            arch: arm
+          - os: linux
+            arch: arm64
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+
+      - name: Set environment from runtime properties
+        run: |
+          echo "MATTERMOST_RELEASE=$(grep 'mattermost-server' dependabot/go.mod | cut -d' ' -f2)" >> $GITHUB_ENV
+          echo "MMCTL_RELEASE=v7.5.2" >> $GITHUB_ENV
+
+      - name: Pull docker image
+        run: 'docker pull "${{ env.DOCKER_IMAGE }}"'
+
+      - name: Build
+        env:
+          GOOS: ${{ matrix.os }}
+          GOARCH: ${{ matrix.arch }}
+        run: docker run --mount="type=bind,source=$PWD,destination=${{ env.DOCKER_PWD }}" --rm=true --tty=true --workdir="${{ env.DOCKER_PWD }}" -e DEBIAN_RELEASE -e MATTERMOST_RELEASE -e MMCTL_RELEASE -e GOOS -e GOARCH "${{ env.DOCKER_IMAGE }}" ./build.sh
+
+      - name: Tag release
+        if: github.ref == 'refs/heads/main'
+        uses: actions/github-script@v3
+        # this throws an error if the tag already exists. can't find a way around that without writing our own Github REST client or forking github's scripts repo.
+        # would prefer to do this before any of these jobs run, but we need to know the mattermost version which only happens after a clone. could potentially
+        # setup a separate job which does clone + tag, but felt like this was "good enough" for now.
+        continue-on-error: true
+        with:
+          script: |
+            github.git.createRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: 'refs/tags/${{ env.MATTERMOST_RELEASE }}',
+              sha: context.sha
+            })
+
+      - name: Create Github release
+        if: github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          tag_name: ${{ env.MATTERMOST_RELEASE }}
+          files: |
+            mattermost-${{ env.MATTERMOST_RELEASE }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
+            mattermost-${{ env.MATTERMOST_RELEASE }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz.sha512sum
