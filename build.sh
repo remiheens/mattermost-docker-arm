@@ -114,14 +114,16 @@ make --directory="${HOME}/go/src/github.com/mattermost/mmctl" \
 	BUILD_NUMBER="dev-$(go env GOOS)-$(go env GOARCH)-${MMCTL_RELEASE}" \
 	ADVANCED_VET=0 \
 	GO="GOARCH= GOOS= $(command -v go)"
+# build focalboard
+make --directory="${HOME}/go/src/github.com/mattermost/focalboard" \
+	prebuild
+make --directory="${HOME}/go/src/github.com/mattermost/focalboard" \
+	build
 # build Mattermost webapp
 npm set progress false
 sed -i -e 's#--verbose#--display minimal#' \
 	"${HOME}/go/src/github.com/mattermost/mattermost-webapp/package.json"
 make --directory="${HOME}/go/src/github.com/mattermost/mattermost-webapp" \
-	build
-# build focalboard
-make --directory="${HOME}/go/src/github.com/mattermost/focalboard" \
 	build
 # build Mattermost server
 patch --directory="${HOME}/go/src/github.com/mattermost/mattermost-server" \
