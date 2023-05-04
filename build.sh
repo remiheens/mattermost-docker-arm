@@ -142,6 +142,8 @@ make --directory="${HOME}/go/src/github.com/mattermost/mattermost-server" \
 make --directory="${HOME}/go/src/github.com/mattermost/mattermost-server" \
 	build-linux package-linux \
 	BUILD_NUMBER="dev-$(go env GOOS)-$(go env GOARCH)-${MATTERMOST_RELEASE}" \
+	BUILD_BOARDS=0 \
+	BUILD_ENTERPRISE=0 \
 	GO="GOARCH=$(go env GOARCH) GOOS=$(go env GOOS) $(command -v go)" \
 	PLUGIN_PACKAGES=''
 # rename archive and calculate its SHA512 sum
