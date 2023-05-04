@@ -37,3 +37,6 @@ index faa027239..df40f0c68 100644
 -		exit 1; \
 -	fi
 -
+ package-osx-amd64: package-prep
+ 	DIST_PATH_GENERIC=$(DIST_PATH_OSX_AMD64) CURRENT_PACKAGE_ARCH=darwin_amd64 PLUGIN_ARCH=osx-amd64 MMCTL_PLATFORM="Darwin-x86_64" MM_BIN_NAME=mattermost $(MAKE) package-general
+ 	@# Package
