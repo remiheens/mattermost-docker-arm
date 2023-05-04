@@ -41,7 +41,7 @@ if [ "$(id -u)" -eq 0 ]; then # as root user
 	apt-get update
 	# install dependencies
 	apt-get install --quiet \
-		wget build-essential patch git python2
+		wget build-essential patch git python2 
 	# install 'pngquant' build dependencies (required by node module)
 	apt-get build-dep --quiet \
 		pngquant
@@ -81,6 +81,12 @@ for COMPONENT in server webapp; do
 	tar --directory="${HOME}/go/src/github.com/mattermost/mattermost-${COMPONENT}" \
 		--strip-components=1 --extract --file="mattermost-${COMPONENT}.tar.gz"
 done
+# download and extract focalboard
+install --directory "${HOME}/go/src/github.com/mattermost/focalboard"
+	wget --quiet --continue --output-document="focalboard.tar.gz" \
+		"https://github.com/mattermost/focalboard/archive/${MATTERMOST_RELEASE}.tar.gz"
+	tar --directory="${HOME}/go/src/github.com/mattermost/focalboard" \
+		--strip-components=1 --extract --file="focalboard.tar.gz"
 
 # install mattermost-webapp's required version of nodejs
 pushd "${HOME}/go/src/github.com/mattermost/mattermost-webapp"
@@ -113,6 +119,9 @@ npm set progress false
 sed -i -e 's#--verbose#--display minimal#' \
 	"${HOME}/go/src/github.com/mattermost/mattermost-webapp/package.json"
 make --directory="${HOME}/go/src/github.com/mattermost/mattermost-webapp" \
+	build
+# build focalboard
+make --directory="${HOME}/go/src/github.com/mattermost/focalboard" \
 	build
 # build Mattermost server
 patch --directory="${HOME}/go/src/github.com/mattermost/mattermost-server" \
