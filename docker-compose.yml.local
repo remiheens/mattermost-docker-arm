@@ -2,8 +2,7 @@ version: "3"
 
 services:
   db:
-    build: db
-    read_only: true
+    image: rheens/mattermost-db:v7.10.0
     restart: unless-stopped
     volumes:
       - ./volumes/db/var/lib/postgresql/data:/var/lib/postgresql/data
@@ -13,12 +12,7 @@ services:
       - POSTGRES_PASSWORD=
       - POSTGRES_DB=
   app:
-    build:
-      context: app
-      args:
-         - PUID=1000
-         - PGID=1000
-         - MM_VERSION=7.5.2
+    image: rheens/mattermost-app:v7.10.0
     restart: unless-stopped
     volumes:
       - ./volumes/app/mattermost/config:/mattermost/config:rw
@@ -33,4 +27,3 @@ services:
       - MM_DBNAME=
       - MM_SQLSETTINGS_DATASOURCE=postgres://<USER>:<PASSWORD>@<DB SERVICE NAME>:<PASSWORD>/<DB NAME>?sslmode=disable&connect_timeout=10
       - MM_SERVICESETTINGS_SITEURL=http://localhost/
-      #- MM_CONFIG=/mattermost/config/config.json
