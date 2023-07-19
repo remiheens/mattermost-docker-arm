@@ -25,5 +25,5 @@ services:
       - MM_USERNAME=
       - MM_PASSWORD=
       - MM_DBNAME=
-      - MM_SQLSETTINGS_DATASOURCE=postgres://<USER>:<PASSWORD>@<DB SERVICE NAME>:<PASSWORD>/<DB NAME>?sslmode=disable&connect_timeout=10
+      - MM_SQLSETTINGS_DATASOURCE=postgres://<USER>:<PASSWORD>@<DB SERVICE NAME>:5432/<DB NAME>?sslmode=disable&connect_timeout=10
       - MM_SERVICESETTINGS_SITEURL=http://localhost/
