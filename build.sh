@@ -124,7 +124,7 @@ npm set progress false
 sed -i -e 's#--verbose#--display minimal#' \
 	"${HOME}/go/src/github.com/mattermost/mattermost/webapp/package.json"
 make --directory="${HOME}/go/src/github.com/mattermost/mattermost/webapp" \
-	build
+	dist
 # build Mattermost server
 patch --directory="${HOME}/go/src/github.com/mattermost/mattermost/server" \
 	--strip=1 -t < "${HOME}/build-release.patch"
