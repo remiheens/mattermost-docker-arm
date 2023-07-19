@@ -74,13 +74,12 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
 # download and extract Mattermost sources
-for COMPONENT in server webapp; do
-	install --directory "${HOME}/go/src/github.com/mattermost/mattermost-${COMPONENT}"
-	wget --quiet --continue --output-document="mattermost-${COMPONENT}.tar.gz" \
-		"https://github.com/mattermost/mattermost-${COMPONENT}/archive/${MATTERMOST_RELEASE}.tar.gz"
-	tar --directory="${HOME}/go/src/github.com/mattermost/mattermost-${COMPONENT}" \
-		--strip-components=1 --extract --file="mattermost-${COMPONENT}.tar.gz"
-done
+install --directory "${HOME}/go/src/github.com/mattermost/mattermost"
+wget --quiet --continue --output-document="mattermost.tar.gz" \
+	"https://github.com/mattermost/mattermost/archive/${MATTERMOST_RELEASE}.tar.gz"
+tar --directory="${HOME}/go/src/github.com/mattermost/mattermost" \
+	--strip-components=1 --extract --file="mattermost.tar.gz"
+
 # download and extract focalboard
 install --directory "${HOME}/go/src/github.com/mattermost/focalboard"
 	wget --quiet --continue --output-document="focalboard.tar.gz" \
@@ -89,7 +88,7 @@ install --directory "${HOME}/go/src/github.com/mattermost/focalboard"
 		--strip-components=1 --extract --file="focalboard.tar.gz"
 
 # install mattermost-webapp's required version of nodejs
-pushd "${HOME}/go/src/github.com/mattermost/mattermost-webapp"
+pushd "${HOME}/go/src/github.com/mattermost/mattermost/webapp"
 nvm install
 popd
 
@@ -122,24 +121,24 @@ make --directory="${HOME}/go/src/github.com/mattermost/focalboard" \
 # build Mattermost webapp
 npm set progress false
 sed -i -e 's#--verbose#--display minimal#' \
-	"${HOME}/go/src/github.com/mattermost/mattermost-webapp/package.json"
-make --directory="${HOME}/go/src/github.com/mattermost/mattermost-webapp" \
+	"${HOME}/go/src/github.com/mattermost/mattermost/webapp/package.json"
+make --directory="${HOME}/go/src/github.com/mattermost/mattermost/webapp" \
 	build
 # build Mattermost server
-patch --directory="${HOME}/go/src/github.com/mattermost/mattermost-server" \
+patch --directory="${HOME}/go/src/github.com/mattermost/mattermost/server" \
 	--strip=1 -t < "${HOME}/build-release.patch"
 sed -i \
 	-e 's#go generate#env --unset=GOOS --unset=GOARCH go generate#' \
 	-e 's#$(GO) generate#env --unset=GOOS --unset=GOARCH go generate#' \
 	-e 's#PWD#CURDIR#' \
-	"${HOME}/go/src/github.com/mattermost/mattermost-server/Makefile" \
-	"${HOME}/go/src/github.com/mattermost/mattermost-server/build/release.mk"
-make --directory="${HOME}/go/src/github.com/mattermost/mattermost-server" \
+	"${HOME}/go/src/github.com/mattermost/mattermost/server/Makefile" \
+	"${HOME}/go/src/github.com/mattermost/mattermost/server/build/release.mk"
+make --directory="${HOME}/go/src/github.com/mattermost/mattermost/server" \
 	config-reset \
 	BUILD_NUMBER="dev-$(go env GOOS)-$(go env GOARCH)-${MATTERMOST_RELEASE}" \
 	GO="GOARCH= GOOS= $(command -v go)" \
 	PLUGIN_PACKAGES=''
-make --directory="${HOME}/go/src/github.com/mattermost/mattermost-server" \
+make --directory="${HOME}/go/src/github.com/mattermost/mattermost/server" \
 	build-linux package-linux \
 	BUILD_NUMBER="dev-$(go env GOOS)-$(go env GOARCH)-${MATTERMOST_RELEASE}" \
 	BUILD_BOARDS=0 \
@@ -147,7 +146,7 @@ make --directory="${HOME}/go/src/github.com/mattermost/mattermost-server" \
 	GO="GOARCH=$(go env GOARCH) GOOS=$(go env GOOS) $(command -v go)" \
 	PLUGIN_PACKAGES=''
 # rename archive and calculate its SHA512 sum
-mv "${HOME}/go/src/github.com/mattermost/mattermost-server/dist/mattermost-team-linux-amd64.tar.gz" \
+mv "${HOME}/go/src/github.com/mattermost/mattermost/server/dist/mattermost-team-linux-amd64.tar.gz" \
 	"${HOME}/mattermost-${MATTERMOST_RELEASE}-$(go env GOOS)-$(go env GOARCH).tar.gz"
 sha512sum "${HOME}/mattermost-${MATTERMOST_RELEASE}-$(go env GOOS)-$(go env GOARCH).tar.gz" | \
 	tee "${HOME}/mattermost-${MATTERMOST_RELEASE}-$(go env GOOS)-$(go env GOARCH).tar.gz.sha512sum"
