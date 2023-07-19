@@ -84,7 +84,7 @@ tar --directory="${HOME}/go/src/github.com/mattermost/mattermost" \
 # download and extract focalboard
 install --directory "${HOME}/go/src/github.com/mattermost/focalboard"
 	wget --quiet --continue --output-document="focalboard.tar.gz" \
-		"https://github.com/mattermost/focalboard/archive/${MATTERMOST_RELEASE}.tar.gz"
+		"https://github.com/mattermost/focalboard/archive/${MM_FOCALBOARD_RELEASE}.tar.gz"
 	tar --directory="${HOME}/go/src/github.com/mattermost/focalboard" \
 		--strip-components=1 --extract --file="focalboard.tar.gz"
 
