@@ -6,7 +6,7 @@ on:
     branches: [ main ]
 
 env:
-  DEBIAN_RELEASE: buster
+  DEBIAN_RELEASE: bookworm
   DOCKER_PWD: /root
   DOCKER_IMAGE: debian:${DEBIAN_RELEASE}
   GO_VERSION: 1.19.9

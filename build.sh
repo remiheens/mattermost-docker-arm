@@ -42,7 +42,7 @@ if [ "$(id -u)" -eq 0 ]; then # as root user
 	apt-get update
 	# install dependencies
 	apt-get install --quiet \
-		wget build-essential patch git python2 
+		wget build-essential patch git python3 
 	# install 'pngquant' build dependencies (required by node module)
 	apt-get build-dep --quiet \
 		pngquant
@@ -83,10 +83,10 @@ tar --directory="${HOME}/go/src/github.com/mattermost/mattermost" \
 
 # download and extract focalboard
 install --directory "${HOME}/go/src/github.com/mattermost/focalboard"
-	wget --quiet --continue --output-document="focalboard.tar.gz" \
-		"https://github.com/mattermost/focalboard/archive/${MM_FOCALBOARD_RELEASE}.tar.gz"
-	tar --directory="${HOME}/go/src/github.com/mattermost/focalboard" \
-		--strip-components=1 --extract --file="focalboard.tar.gz"
+wget --quiet --continue --output-document="focalboard.tar.gz" \
+	"https://github.com/mattermost/focalboard/archive/${MM_FOCALBOARD_RELEASE}.tar.gz"
+tar --directory="${HOME}/go/src/github.com/mattermost/focalboard" \
+	--strip-components=1 --extract --file="focalboard.tar.gz"
 
 # install mattermost-webapp's required version of nodejs
 pushd "${HOME}/go/src/github.com/mattermost/mattermost/webapp"
@@ -95,7 +95,7 @@ popd
 
 # prepare the go build environment
 install --directory "${HOME}/go/bin"
-if [ "$(go env GOOS)_$(go env GOARCH)" != 'linux_amd64' ]; then
+if [ "$(go env GOOS)_$(go env GOARCH)" != 'linux_amd64' && ! -f ${HOME}/go/bin/linux_amd64 ]; then
 	ln --symbolic \
 		"${HOME}/go/bin/$(go env GOOS)_$(go env GOARCH)" \
 		"${HOME}/go/bin/linux_amd64"
