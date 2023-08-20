@@ -10,7 +10,7 @@ MATTERMOST_RELEASE="${MATTERMOST_RELEASE:-v5.26.0}"
 MMCTL_RELEASE="${MMCTL_RELEASE:-v5.26.0}"
 MM_FOCALBOARD_RELEASE="${MM_FOCALBOARD_RELEASE:-v5.26.0}"
 # golang version
-GO_VERSION="${GO_VERSION:-1.18.1}"
+GO_VERSION="${GO_VERSION:-1.19.9}"
 
 if [ "$(id -u)" -eq 0 ]; then # as root user
 	# create build user, if needed
