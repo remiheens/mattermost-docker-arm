@@ -17,8 +17,8 @@ jobs:
     strategy:
       matrix:
         include:
-          #- os: linux
-          #  arch: arm
+          - os: linux
+            arch: arm
           - os: linux
             arch: arm64
 
