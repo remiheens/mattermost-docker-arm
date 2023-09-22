@@ -39,9 +39,6 @@ RUN mkdir -p /mattermost/data /mattermost/plugins /mattermost/client/plugins \
 
 USER mattermost
 
-#Healthcheck to make sure container is ready
-HEALTHCHECK CMD curl --fail http://localhost:$MM_LISTEN_PORT || exit 1
-
 # Configure entrypoint and command
 COPY entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
