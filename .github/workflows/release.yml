@@ -29,8 +29,8 @@ jobs:
       - name: Set environment from runtime properties
         run: |
           echo "MATTERMOST_RELEASE=$(grep 'mattermost-server' dependabot/go.mod | cut -d' ' -f2)" >> $GITHUB_ENV
-          echo "MMCTL_RELEASE=v7.10.4" >> $GITHUB_ENV
-          echo "MM_FOCALBOARD_RELEASE=v7.10.4" >> $GITHUB_ENV
+          echo "GO_VERSION=$(grep 'go ' dependabot/go.mod | cut -d' ' -f2)" >> $GITHUB_ENV
+          echo "MM_FOCALBOARD_RELEASE=v7.11.3" >> $GITHUB_ENV
 
       - name: Pull docker image
         run: 'docker pull "${{ env.DOCKER_IMAGE }}"'

@@ -1,8 +1,7 @@
 module github.com/remiheens/mattermost-docker-arm/dependabot
 
-go 1.19
+go 1.20.0
 
 require (
-	github.com/mattermost/mattermost-server/v6 v9.0.0
-	github.com/mattermost/mmctl v0.0.0-20211221153052-1bb2fec4c15e
+	github.com/mattermost/mattermost/v9 v9.0.0
 )
