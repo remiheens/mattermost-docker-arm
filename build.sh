@@ -86,13 +86,6 @@ wget --quiet --continue --output-document="mattermost.tar.gz" \
 tar --directory="${HOME}/go/src/github.com/mattermost/mattermost" \
 	--strip-components=1 --extract --file="mattermost.tar.gz"
 
-# download and extract focalboard
-install --directory "${HOME}/go/src/github.com/mattermost/focalboard"
-wget --quiet --continue --output-document="focalboard.tar.gz" \
-	"https://github.com/mattermost/focalboard/archive/${MM_FOCALBOARD_RELEASE}.tar.gz"
-tar --directory="${HOME}/go/src/github.com/mattermost/focalboard" \
-	--strip-components=1 --extract --file="focalboard.tar.gz"
-
 # install mattermost-webapp's required version of nodejs
 pushd "${HOME}/go/src/github.com/mattermost/mattermost/webapp"
 nvm install
