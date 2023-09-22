@@ -109,6 +109,8 @@ fi
 
 # build focalboard
 make --directory="${HOME}/go/src/github.com/mattermost/focalboard" \
+	prebuild
+make --directory="${HOME}/go/src/github.com/mattermost/focalboard" \
 	linux-app
 # # build Mattermost webapp
 npm set progress false
