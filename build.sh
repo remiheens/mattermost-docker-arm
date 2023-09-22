@@ -7,7 +7,6 @@ BUILD_USER_NAME="${BUILD_USER_NAME:-build}"
 DEBIAN_RELEASE="${DEBIAN_RELEASE:-bookworm}"
 # Mattermost version to build
 MATTERMOST_RELEASE="${MATTERMOST_RELEASE:-v5.26.0}"
-MM_FOCALBOARD_RELEASE="${MM_FOCALBOARD_RELEASE:-v5.26.0}"
 # golang version
 GO_VERSION="${GO_VERSION:-1.20.8}"
 
@@ -107,11 +106,6 @@ if [ "$(go env GOOS)_$(go env GOARCH)" != 'linux_amd64' ] && [ ! -f "${HOME}/go/
 		"${HOME}/go/bin/linux_amd64"
 fi
 
-# build focalboard
-make --directory="${HOME}/go/src/github.com/mattermost/focalboard" \
-	prebuild
-make --directory="${HOME}/go/src/github.com/mattermost/focalboard" \
-	linux-app
 # # build Mattermost webapp
 npm set progress false
 sed -i -e 's#--verbose#--display minimal#' \
