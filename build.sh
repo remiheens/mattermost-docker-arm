@@ -7,10 +7,8 @@ BUILD_USER_NAME="${BUILD_USER_NAME:-build}"
 DEBIAN_RELEASE="${DEBIAN_RELEASE:-bookworm}"
 # Mattermost version to build
 MATTERMOST_RELEASE="${MATTERMOST_RELEASE:-v5.26.0}"
-MMCTL_RELEASE="${MMCTL_RELEASE:-v5.26.0}"
-MM_FOCALBOARD_RELEASE="${MM_FOCALBOARD_RELEASE:-v5.26.0}"
 # golang version
-GO_VERSION="${GO_VERSION:-1.19.9}"
+GO_VERSION="${GO_VERSION:-1.20.8}"
 
 if [ "$(id -u)" -eq 0 ]; then # as root user
 	# create build user, if needed
@@ -77,7 +75,7 @@ export PATH=$GOROOT/bin:$PATH
 cd "${HOME}"
 
 # install NVM
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
@@ -87,13 +85,6 @@ wget --quiet --continue --output-document="mattermost.tar.gz" \
 	"https://github.com/mattermost/mattermost/archive/${MATTERMOST_RELEASE}.tar.gz"
 tar --directory="${HOME}/go/src/github.com/mattermost/mattermost" \
 	--strip-components=1 --extract --file="mattermost.tar.gz"
-
-# download and extract focalboard
-install --directory "${HOME}/go/src/github.com/mattermost/focalboard"
-wget --quiet --continue --output-document="focalboard.tar.gz" \
-	"https://github.com/mattermost/focalboard/archive/${MM_FOCALBOARD_RELEASE}.tar.gz"
-tar --directory="${HOME}/go/src/github.com/mattermost/focalboard" \
-	--strip-components=1 --extract --file="focalboard.tar.gz"
 
 # install mattermost-webapp's required version of nodejs
 pushd "${HOME}/go/src/github.com/mattermost/mattermost/webapp"
@@ -108,16 +99,11 @@ if [ "$(go env GOOS)_$(go env GOARCH)" != 'linux_amd64' ] && [ ! -f "${HOME}/go/
 		"${HOME}/go/bin/linux_amd64"
 fi
 
-# build focalboard
-make --directory="${HOME}/go/src/github.com/mattermost/focalboard" \
-	prebuild
-make --directory="${HOME}/go/src/github.com/mattermost/focalboard" \
-	build
 # # build Mattermost webapp
 npm set progress false
 sed -i -e 's#--verbose#--display minimal#' \
 	"${HOME}/go/src/github.com/mattermost/mattermost/webapp/package.json"
-make --directory="${HOME}/go/src/github.com/mattermost/mattermost/webapp" \
+ make --directory="${HOME}/go/src/github.com/mattermost/mattermost/webapp" \
 	dist
 # build Mattermost server
 patch --directory="${HOME}/go/src/github.com/mattermost/mattermost/server" \
@@ -130,6 +116,11 @@ sed -i \
 	"${HOME}/go/src/github.com/mattermost/mattermost/server/build/release.mk"
 make --directory="${HOME}/go/src/github.com/mattermost/mattermost/server" \
 	config-reset \
+	BUILD_NUMBER="dev-$(go env GOOS)-$(go env GOARCH)-${MATTERMOST_RELEASE}" \
+	GO="GOARCH= GOOS= $(command -v go)" \
+	PLUGIN_PACKAGES=''
+make --directory="${HOME}/go/src/github.com/mattermost/mattermost/server" \
+	setup-go-work \
 	BUILD_NUMBER="dev-$(go env GOOS)-$(go env GOARCH)-${MATTERMOST_RELEASE}" \
 	GO="GOARCH= GOOS= $(command -v go)" \
 	PLUGIN_PACKAGES=''
