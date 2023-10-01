@@ -75,7 +75,7 @@ export PATH=$GOROOT/bin:$PATH
 cd "${HOME}"
 
 # install NVM
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.5/install.sh | bash
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 
@@ -103,7 +103,7 @@ fi
 npm set progress false
 sed -i -e 's#--verbose#--display minimal#' \
 	"${HOME}/go/src/github.com/mattermost/mattermost/webapp/package.json"
-make --directory="${HOME}/go/src/github.com/mattermost/mattermost/webapp" \
+ make --directory="${HOME}/go/src/github.com/mattermost/mattermost/webapp" \
 	dist
 # build Mattermost server
 patch --directory="${HOME}/go/src/github.com/mattermost/mattermost/server" \
@@ -116,6 +116,11 @@ sed -i \
 	"${HOME}/go/src/github.com/mattermost/mattermost/server/build/release.mk"
 make --directory="${HOME}/go/src/github.com/mattermost/mattermost/server" \
 	config-reset \
+	BUILD_NUMBER="dev-$(go env GOOS)-$(go env GOARCH)-${MATTERMOST_RELEASE}" \
+	GO="GOARCH= GOOS= $(command -v go)" \
+	PLUGIN_PACKAGES=''
+make --directory="${HOME}/go/src/github.com/mattermost/mattermost/server" \
+	setup-go-work \
 	BUILD_NUMBER="dev-$(go env GOOS)-$(go env GOARCH)-${MATTERMOST_RELEASE}" \
 	GO="GOARCH= GOOS= $(command -v go)" \
 	PLUGIN_PACKAGES=''
