@@ -14,3 +14,6 @@ build
 go*.tar.gz*
 .env
 .bash_history
+
+tmp
+build.env
