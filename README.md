@@ -1,6 +1,5 @@
 [![Docker Pulls](https://badgen.net/docker/pulls/rheens/mattermost-app?icon=docker&label=pulls)](https://hub.docker.com/r/rheens/mattermost-app)
 [![Docker Stars](https://badgen.net/docker/stars/rheens/mattermost-app?icon=docker&label=stars)](https://hub.docker.com/r/rheens/mattermost-app)
-[![Docker Image Size](https://badgen.net/docker/size/rheens/mattermost-app?icon=docker&label=image%20size)](https://hub.docker.com/r/rheens/mattermost-app)
 ![Github stars](https://badgen.net/github/stars/remiheens/mattermost-docker-arm?icon=github&label=stars)
 ![Github forks](https://badgen.net/github/forks/remiheens/mattermost-docker-arm?icon=github&label=forks)
 ![Github issues](https://img.shields.io/github/issues/remiheens/mattermost-docker-arm)
