@@ -2,7 +2,7 @@ version: "3"
 
 services:
   db:
-    image: rheens/mattermost-db:v7.10.0
+    image: rheens/mattermost-db:v9.0.0
     restart: unless-stopped
     volumes:
       - ./volumes/db/var/lib/postgresql/data:/var/lib/postgresql/data
@@ -12,7 +12,7 @@ services:
       - POSTGRES_PASSWORD=
       - POSTGRES_DB=
   app:
-    image: rheens/mattermost-app:v7.10.0
+    image: rheens/mattermost-app:v9.0.0
     restart: unless-stopped
     volumes:
       - ./volumes/app/mattermost/config:/mattermost/config:rw
