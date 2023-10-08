@@ -1,9 +1,13 @@
 name: Package and release
 on:
   push:
-    branches: [ main ]
+    branches: 
+      - main
+      - support-**
   pull_request:
-    branches: [ main ]
+    branches: 
+      - main
+      - support-**
 
 env:
   DEBIAN_RELEASE: bookworm
@@ -58,7 +62,7 @@ jobs:
             })
 
       - name: Create Github release
-        if: github.ref == 'refs/heads/main'
+        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref,'refs/heads/support-') }}
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
