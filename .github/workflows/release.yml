@@ -46,7 +46,7 @@ jobs:
         run: docker run --mount="type=bind,source=$PWD,destination=${{ env.DOCKER_PWD }}" --rm=true --tty=true --workdir="${{ env.DOCKER_PWD }}" -e DEBIAN_RELEASE -e MATTERMOST_RELEASE -e MMCTL_RELEASE -e MM_FOCALBOARD_RELEASE -e GOOS -e GOARCH "${{ env.DOCKER_IMAGE }}" ./build.sh
 
       - name: Tag release
-        if: github.ref == 'refs/heads/main'
+        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref,'refs/heads/support-') }}
         uses: actions/github-script@v3
         # this throws an error if the tag already exists. can't find a way around that without writing our own Github REST client or forking github's scripts repo.
         # would prefer to do this before any of these jobs run, but we need to know the mattermost version which only happens after a clone. could potentially
