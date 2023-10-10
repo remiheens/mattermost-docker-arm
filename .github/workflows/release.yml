@@ -9,7 +9,7 @@ env:
   DEBIAN_RELEASE: bookworm
   DOCKER_PWD: /root
   DOCKER_IMAGE: debian:${DEBIAN_RELEASE}
-  GO_VERSION: 1.19.9
+  GO_VERSION: 1.20.8
 
 jobs:
   build:
@@ -24,12 +24,11 @@ jobs:
 
     steps:
       - name: Clone repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set environment from runtime properties
         run: |
           echo "MATTERMOST_RELEASE=$(grep 'mattermost/mattermost' dependabot/go.mod | cut -d' ' -f2)" >> $GITHUB_ENV
-          echo "GO_VERSION=$(grep 'go ' dependabot/go.mod | cut -d' ' -f2)" >> $GITHUB_ENV
 
       - name: Pull docker image
         run: 'docker pull "${{ env.DOCKER_IMAGE }}"'
@@ -42,14 +41,14 @@ jobs:
 
       - name: Tag release
         if: github.ref == 'refs/heads/main'
-        uses: actions/github-script@v3
+        uses: actions/github-script@v6
         # this throws an error if the tag already exists. can't find a way around that without writing our own Github REST client or forking github's scripts repo.
         # would prefer to do this before any of these jobs run, but we need to know the mattermost version which only happens after a clone. could potentially
         # setup a separate job which does clone + tag, but felt like this was "good enough" for now.
         continue-on-error: true
         with:
           script: |
-            github.git.createRef({
+            github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: 'refs/tags/${{ env.MATTERMOST_RELEASE }}',
