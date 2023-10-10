@@ -9,7 +9,7 @@ env:
   DEBIAN_RELEASE: bookworm
   DOCKER_PWD: /root
   DOCKER_IMAGE: debian:${DEBIAN_RELEASE}
-  GO_VERSION: 1.19.9
+  GO_VERSION: 1.20.8
 
 jobs:
   build:
@@ -29,7 +29,6 @@ jobs:
       - name: Set environment from runtime properties
         run: |
           echo "MATTERMOST_RELEASE=$(grep 'mattermost/mattermost' dependabot/go.mod | cut -d' ' -f2)" >> $GITHUB_ENV
-          echo "GO_VERSION=$(grep 'go ' dependabot/go.mod | cut -d' ' -f2)" >> $GITHUB_ENV
 
       - name: Pull docker image
         run: 'docker pull "${{ env.DOCKER_IMAGE }}"'
