@@ -47,12 +47,13 @@ jobs:
 
       - name: Tag release
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref,'refs/heads/support-') }}
-        uses: actions/github-script@v3
+        uses: actions/github-script@v6
         # this throws an error if the tag already exists. can't find a way around that without writing our own Github REST client or forking github's scripts repo.
         # would prefer to do this before any of these jobs run, but we need to know the mattermost version which only happens after a clone. could potentially
         # setup a separate job which does clone + tag, but felt like this was "good enough" for now.
         continue-on-error: true
         with:
+          github-token: ${{ secrets.GH_TOKEN }}
           script: |
             github.git.createRef({
               owner: context.repo.owner,
