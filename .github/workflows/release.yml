@@ -1,9 +1,13 @@
 name: Package and release
 on:
   push:
-    branches: [ main ]
+    branches: 
+      - main
+      - support-**
   pull_request:
-    branches: [ main ]
+    branches: 
+      - main
+      - support-**
 
 env:
   DEBIAN_RELEASE: bookworm
