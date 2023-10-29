@@ -44,15 +44,16 @@ jobs:
         run: docker run --mount="type=bind,source=$PWD,destination=${{ env.DOCKER_PWD }}" --rm=true --tty=true --workdir="${{ env.DOCKER_PWD }}" -e DEBIAN_RELEASE -e MATTERMOST_RELEASE -e MMCTL_RELEASE -e MM_FOCALBOARD_RELEASE -e GOOS -e GOARCH "${{ env.DOCKER_IMAGE }}" ./build.sh
 
       - name: Tag release
-        if: github.ref == 'refs/heads/main'
+        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref,'refs/heads/support-') }}
         uses: actions/github-script@v6
         # this throws an error if the tag already exists. can't find a way around that without writing our own Github REST client or forking github's scripts repo.
         # would prefer to do this before any of these jobs run, but we need to know the mattermost version which only happens after a clone. could potentially
         # setup a separate job which does clone + tag, but felt like this was "good enough" for now.
         continue-on-error: true
         with:
+          github-token: ${{ secrets.GH_TOKEN }}
           script: |
-            github.rest.git.createRef({
+            github.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: 'refs/tags/${{ env.MATTERMOST_RELEASE }}',
@@ -60,7 +61,7 @@ jobs:
             })
 
       - name: Create Github release
-        if: github.ref == 'refs/heads/main'
+        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref,'refs/heads/support-') }}
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -69,3 +70,4 @@ jobs:
           files: |
             mattermost-${{ env.MATTERMOST_RELEASE }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
             mattermost-${{ env.MATTERMOST_RELEASE }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz.sha512sum
+  
