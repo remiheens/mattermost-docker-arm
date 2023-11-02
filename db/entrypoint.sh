@@ -54,6 +54,11 @@ if [ "$1" = 'postgres' ]; then
     ARCHIVE_MODE=on
   fi
 
+  # setup postgres vars based on app driven variable
+  export POSTGRES_USER=$MM_USERNAME
+  export POSTGRES_PASSWORD=$MM_PASSWORD
+  export POSTGRES_DB=$MM_DBNAME
+
   # Update postgresql configuration
   update_conf $wal_enable
 

@@ -2,17 +2,15 @@ version: "3"
 
 services:
   db:
-    image: rheens/mattermost-db:v9.0.1
+    image: rheens/mattermost-db:v9.1.1
     restart: unless-stopped
     volumes:
       - ./volumes/db/var/lib/postgresql/data:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro
-    environment:
-      - POSTGRES_USER=
-      - POSTGRES_PASSWORD=
-      - POSTGRES_DB=
+    env_file:
+      - run.env
   app:
-    image: rheens/mattermost-app:v9.0.1
+    image: rheens/mattermost-app:v9.1.1
     restart: unless-stopped
     volumes:
       - ./volumes/app/mattermost/config:/mattermost/config:rw
@@ -21,9 +19,5 @@ services:
       - ./volumes/app/mattermost/plugins:/mattermost/plugins:rw
       - ./volumes/app/mattermost/client-plugins:/mattermost/client/plugins:rw
       - /etc/localtime:/etc/localtime:ro
-    environment:
-      - MM_USERNAME=
-      - MM_PASSWORD=
-      - MM_DBNAME=
-      - MM_SQLSETTINGS_DATASOURCE=postgres://<USER>:<PASSWORD>@<DB SERVICE NAME>:5432/<DB NAME>?sslmode=disable&connect_timeout=10
-      - MM_SERVICESETTINGS_SITEURL=http://localhost/
+    env_file:
+      - run.env
