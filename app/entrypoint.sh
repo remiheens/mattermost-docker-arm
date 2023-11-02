@@ -39,7 +39,7 @@ if [ "$1" = 'mattermost' ]; then
     echo "No configuration file $MM_CONFIG"
     echo "Creating a new one"
     # Copy default configuration file
-    cp /config.json.save "$MM_CONFIG"
+    cp config.json.save "$MM_CONFIG"
     # Substitute some parameters with jq
     jq '.ServiceSettings.ListenAddress = ":8000"' "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
     jq '.LogSettings.EnableConsole = true' "$MM_CONFIG" >"$MM_CONFIG.tmp" && mv "$MM_CONFIG.tmp" "$MM_CONFIG"
