@@ -29,7 +29,7 @@ RUN apk add --no-cache \
 
 # Get Mattermost
 RUN mkdir -p /mattermost/data /mattermost/plugins /mattermost/client/plugins \
-        && curl -L https://github.com/remiheens/mattermost-docker-arm/releases/download/$MM_VERSION/mattermost-$MM_VERSION-${TARGETOS}-${TARGETARCH}.tar.gz | tar -C /mattermost --strip-components=1 -xvz \
+        && curl -L https://github.com/remiheens/mattermost-docker-arm/releases/download/${MM_VERSION}/mattermost-${MM_VERSION}-${TARGETOS}-${TARGETARCH}.tar.gz | tar -C /mattermost --strip-components=1 -xvz \
         && cp /mattermost/config/config.json /mattermost/config.json.save \
         && rm -rf /mattermost/config/config.json \
         && addgroup -g ${PGID} mattermost \
@@ -37,11 +37,14 @@ RUN mkdir -p /mattermost/data /mattermost/plugins /mattermost/client/plugins \
         && chown -R mattermost:mattermost /mattermost/config.json.save /mattermost/plugins /mattermost/client/plugins \
         && setcap cap_net_bind_service=+ep /mattermost/bin/mattermost
 
+
+
 USER mattermost
 
 # Configure entrypoint and command
 COPY entrypoint.sh /
 ENTRYPOINT ["/entrypoint.sh"]
+
 WORKDIR /mattermost
 CMD ["mattermost"]
 
