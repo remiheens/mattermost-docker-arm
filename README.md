@@ -23,6 +23,21 @@ You just have to update ’dependabot/go.mod’ and ’.github/workflows/release
 1. Up the stack ’docker-compose up -d’
 1. Go to http://localhost:8000
 
+## Troubleshootings
+
+```
+app_1  | No configuration file /mattermost/config/config.json
+app_1  | Creating a new one
+app_1  | cp: can't create '/mattermost/config/config.json': Permission denied
+app_1  | /entrypoint.sh: line 44: can't create /mattermost/config/config.json.tmp: Permission denied
+```
+
+Workaround :
+```
+sudo chown -R $(id -u):$(id -g) ./volumes
+docker-compose up --force-recreate
+```
+
 # Credits 
 
 Original repository for source code : https://github.com/SmartHoneybee/ubiquitous-memory
