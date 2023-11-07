@@ -1,6 +1,6 @@
 version: 2
 updates:
-- package-ecosystem: gomod
+- package-ecosystem: maven
   directory: "/dependabot"
   schedule:
     interval: daily
