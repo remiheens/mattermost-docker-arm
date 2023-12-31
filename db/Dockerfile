@@ -15,10 +15,12 @@ RUN apk add --no-cache \
       python3-dev \
       py3-pip \
       py-cryptography \
-      pv \
-    && pip install --upgrade pip \
-    && pip --no-cache-dir install -c pip-constraints.txt 'wal-e<1.0.0' envdir \
-    && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
+      pv
+
+RUN pip install --upgrade pip --break-system-packages \
+    && pip --no-cache-dir install -c pip-constraints.txt 'wal-e<1.0.0' envdir --break-system-packages
+
+RUN rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
 # Add wale script
 COPY setup-wale.sh /docker-entrypoint-initdb.d/
