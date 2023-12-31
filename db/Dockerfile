@@ -16,8 +16,8 @@ RUN apk add --no-cache \
       py3-pip \
       py-cryptography \
       pv \
-    && pip install --upgrade pip \
-    && pip --no-cache-dir install -c pip-constraints.txt 'wal-e<1.0.0' envdir \
+    && pip install --upgrade pip --break-system-packages \
+    && pip --no-cache-dir install -c pip-constraints.txt 'wal-e<1.0.0' envdir --break-system-packages \
     && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
 
 # Add wale script
