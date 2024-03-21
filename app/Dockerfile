@@ -37,11 +37,10 @@ RUN mkdir -p /mattermost/data /mattermost/plugins /mattermost/client/plugins \
         && chown -R mattermost:mattermost /mattermost/config.json.save /mattermost/plugins /mattermost/client/plugins \
         && setcap cap_net_bind_service=+ep /mattermost/bin/mattermost
 
-USER mattermost
-
 # Configure entrypoint and command
+COPY priv-entrypoint.sh /
 COPY entrypoint.sh /
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/priv-entrypoint.sh"]
 
 WORKDIR /mattermost
 CMD ["mattermost"]
