@@ -2,7 +2,7 @@ version: "3"
 
 services:
   db:
-    image: rheens/mattermost-db:v9.6.0
+    image: rheens/mattermost-db:v9.6.1
     build:
       context: db
     restart: unless-stopped
@@ -12,11 +12,11 @@ services:
     env_file:
       - run.env
   app:
-    image: rheens/mattermost-app:v9.6.0
+    image: rheens/mattermost-app:v9.6.1
     build:
       context: app
       args:
-        - MM_VERSION=v9.6.0
+        - MM_VERSION=v9.6.1
         - GOOS=linux
         - GOARCH=arm64
     restart: unless-stopped
