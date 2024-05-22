@@ -13,7 +13,7 @@ env:
   DEBIAN_RELEASE: bookworm
   DOCKER_PWD: /root
   DOCKER_IMAGE: debian:${DEBIAN_RELEASE}
-  GO_VERSION: 1.22.2
+  GO_VERSION: 1.21.8
 
 jobs:
   build:
@@ -41,7 +41,7 @@ jobs:
         env:
           GOOS: ${{ matrix.os }}
           GOARCH: ${{ matrix.arch }}
-        run: docker run --mount="type=bind,source=$PWD,destination=${{ env.DOCKER_PWD }}" --rm=true --tty=true --workdir="${{ env.DOCKER_PWD }}" -e DEBIAN_RELEASE -e MATTERMOST_RELEASE -e MMCTL_RELEASE -e MM_FOCALBOARD_RELEASE -e GOOS -e GOARCH "${{ env.DOCKER_IMAGE }}" ./build.sh
+        run: docker run --mount="type=bind,source=$PWD,destination=${{ env.DOCKER_PWD }}" --rm=true --tty=true --workdir="${{ env.DOCKER_PWD }}" -e DEBIAN_RELEASE -e MATTERMOST_RELEASE -e MMCTL_RELEASE -e MM_FOCALBOARD_RELEASE -e GOOS -e GOARCH -e GO_VERSION "${{ env.DOCKER_IMAGE }}" ./build.sh
 
       - name: Tag release
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref,'refs/heads/support-') }}
