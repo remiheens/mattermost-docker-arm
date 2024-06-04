@@ -13,7 +13,6 @@ env:
   DEBIAN_RELEASE: bookworm
   DOCKER_PWD: /root
   DOCKER_IMAGE: debian:${DEBIAN_RELEASE}
-  GO_VERSION: 1.21.8
 
 jobs:
   build:
@@ -32,7 +31,7 @@ jobs:
 
       - name: Set environment from runtime properties
         run: |
-          echo "MATTERMOST_RELEASE=$(grep 'mattermost/mattermost' dependabot/go.mod | cut -d' ' -f2)" >> $GITHUB_ENV
+          cat mattermost-release.txt >> $GITHUB_ENV
 
       - name: Pull docker image
         run: 'docker pull "${{ env.DOCKER_IMAGE }}"'
@@ -41,7 +40,7 @@ jobs:
         env:
           GOOS: ${{ matrix.os }}
           GOARCH: ${{ matrix.arch }}
-        run: docker run --mount="type=bind,source=$PWD,destination=${{ env.DOCKER_PWD }}" --rm=true --tty=true --workdir="${{ env.DOCKER_PWD }}" -e DEBIAN_RELEASE -e MATTERMOST_RELEASE -e MMCTL_RELEASE -e MM_FOCALBOARD_RELEASE -e GOOS -e GOARCH -e GO_VERSION "${{ env.DOCKER_IMAGE }}" ./build.sh
+        run: docker run --mount="type=bind,source=$PWD,destination=${{ env.DOCKER_PWD }}" --rm=true --tty=true --workdir="${{ env.DOCKER_PWD }}" -e DEBIAN_RELEASE -e MATTERMOST_VERSION -e MMCTL_RELEASE -e MM_FOCALBOARD_RELEASE -e GOOS -e GOARCH -e GO_VERSION "${{ env.DOCKER_IMAGE }}" ./build.sh
 
       - name: Tag release
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref,'refs/heads/support-') }}
@@ -56,7 +55,7 @@ jobs:
             github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: 'refs/tags/${{ env.MATTERMOST_RELEASE }}',
+              ref: 'refs/tags/${{ env.MATTERMOST_VERSION }}',
               sha: context.sha
             })
 
@@ -66,8 +65,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
-          tag_name: ${{ env.MATTERMOST_RELEASE }}
+          tag_name: ${{ env.MATTERMOST_VERSION }}
           files: |
-            mattermost-${{ env.MATTERMOST_RELEASE }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
-            mattermost-${{ env.MATTERMOST_RELEASE }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz.sha512sum
+            mattermost-${{ env.MATTERMOST_VERSION }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz
+            mattermost-${{ env.MATTERMOST_VERSION }}-${{ matrix.os }}-${{ matrix.arch }}.tar.gz.sha512sum
   

@@ -6,7 +6,7 @@ BUILD_USER_NAME="${BUILD_USER_NAME:-build}"
 # Debian release used during build
 DEBIAN_RELEASE="${DEBIAN_RELEASE:-bookworm}"
 # Mattermost version to build
-MATTERMOST_RELEASE="${MATTERMOST_RELEASE:-v5.26.0}"
+MATTERMOST_VERSION="${MATTERMOST_VERSION:-v5.26.0}"
 # golang version
 GO_VERSION="${GO_VERSION:-1.20.8}"
 
@@ -64,8 +64,8 @@ if [ "$(id -u)" -eq 0 ]; then # as root user
 
 	# salvage build artifacts
 	cp --verbose \
-		"${BUILD_USER_HOME}/mattermost-${MATTERMOST_RELEASE}-$(go env GOOS)-$(go env GOARCH).tar.gz" \
-		"${BUILD_USER_HOME}/mattermost-${MATTERMOST_RELEASE}-$(go env GOOS)-$(go env GOARCH).tar.gz.sha512sum" \
+		"${BUILD_USER_HOME}/mattermost-${MATTERMOST_VERSION}-$(go env GOOS)-$(go env GOARCH).tar.gz" \
+		"${BUILD_USER_HOME}/mattermost-${MATTERMOST_VERSION}-$(go env GOOS)-$(go env GOARCH).tar.gz.sha512sum" \
 		"${HOME}"
 	exit 0
 fi
@@ -82,7 +82,7 @@ export NVM_DIR="$HOME/.nvm"
 # download and extract Mattermost sources
 install --directory "${HOME}/go/src/github.com/mattermost/mattermost"
 wget --quiet --continue --output-document="mattermost.tar.gz" \
-	"https://github.com/mattermost/mattermost/archive/${MATTERMOST_RELEASE}.tar.gz"
+	"https://github.com/mattermost/mattermost/archive/${MATTERMOST_VERSION}.tar.gz"
 tar --directory="${HOME}/go/src/github.com/mattermost/mattermost" \
 	--strip-components=1 --extract --file="mattermost.tar.gz"
 
@@ -116,17 +116,17 @@ sed -i \
 	"${HOME}/go/src/github.com/mattermost/mattermost/server/build/release.mk"
 make --directory="${HOME}/go/src/github.com/mattermost/mattermost/server" \
 	config-reset \
-	BUILD_NUMBER="dev-$(go env GOOS)-$(go env GOARCH)-${MATTERMOST_RELEASE}" \
+	BUILD_NUMBER="dev-$(go env GOOS)-$(go env GOARCH)-${MATTERMOST_VERSION}" \
 	GO="GOARCH= GOOS= $(command -v go)" \
 	PLUGIN_PACKAGES=''
 make --directory="${HOME}/go/src/github.com/mattermost/mattermost/server" \
 	setup-go-work \
-	BUILD_NUMBER="dev-$(go env GOOS)-$(go env GOARCH)-${MATTERMOST_RELEASE}" \
+	BUILD_NUMBER="dev-$(go env GOOS)-$(go env GOARCH)-${MATTERMOST_VERSION}" \
 	GO="GOARCH= GOOS= $(command -v go)" \
 	PLUGIN_PACKAGES=''
 make --directory="${HOME}/go/src/github.com/mattermost/mattermost/server" \
 	build-linux package-linux \
-	BUILD_NUMBER="dev-$(go env GOOS)-$(go env GOARCH)-${MATTERMOST_RELEASE}" \
+	BUILD_NUMBER="dev-$(go env GOOS)-$(go env GOARCH)-${MATTERMOST_VERSION}" \
 	BUILD_BOARDS=0 \
 	BUILD_ENTERPRISE=0 \
 	GO="GOARCH=$(go env GOARCH) GOOS=$(go env GOOS) $(command -v go)" \
@@ -135,6 +135,6 @@ make --directory="${HOME}/go/src/github.com/mattermost/mattermost/server" \
 tar -tzf "${HOME}/go/src/github.com/mattermost/mattermost/server/dist/mattermost-team-linux-amd64.tar.gz"
 # rename archive and calculate its SHA512 sum
 mv "${HOME}/go/src/github.com/mattermost/mattermost/server/dist/mattermost-team-linux-amd64.tar.gz" \
-	"${HOME}/mattermost-${MATTERMOST_RELEASE}-$(go env GOOS)-$(go env GOARCH).tar.gz"
-sha512sum "${HOME}/mattermost-${MATTERMOST_RELEASE}-$(go env GOOS)-$(go env GOARCH).tar.gz" | \
-	tee "${HOME}/mattermost-${MATTERMOST_RELEASE}-$(go env GOOS)-$(go env GOARCH).tar.gz.sha512sum"
+	"${HOME}/mattermost-${MATTERMOST_VERSION}-$(go env GOOS)-$(go env GOARCH).tar.gz"
+sha512sum "${HOME}/mattermost-${MATTERMOST_VERSION}-$(go env GOOS)-$(go env GOARCH).tar.gz" | \
+	tee "${HOME}/mattermost-${MATTERMOST_VERSION}-$(go env GOOS)-$(go env GOARCH).tar.gz.sha512sum"

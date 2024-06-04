@@ -1,0 +1,68 @@
+name: Check for new Mattermost Releases
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Vérifie toutes les jours à minuit
+
+jobs:
+  check-releases:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Get latest release from the monitored repo
+      id: get_release
+      run: |
+        latest_release=$(curl -s https://api.github.com/repos/mattermost/mattermost/releases/latest | jq -r .tag_name)
+        echo "::set-output name=latest_release::$latest_release"
+
+    - name: Compare with last known release
+      id: compare_release
+      run: |
+        set -o allexport
+        source mattermost-release.txt
+        set +o allexport
+
+        echo "Last known release: $MATTERMOST_VERSION"
+        echo "Latest release: ${{ steps.get_release.outputs.latest_release }}"
+
+        if [ "${{ steps.get_release.outputs.latest_release }}" != "$MATTERMOST_VERSION" ]; then
+          echo "New release detected"
+          sed -i "s/MATTERMOST_VERSION=(.*)/MATTERMOST_VERSION=${{ steps.get_release.outputs.latest_release }}/" mattermost-release.txt
+          echo "::set-output name=new_release::true"
+        else
+          echo "No new release"
+          echo "::set-output name=new_release::false"
+        fi
+
+    - name: Create or update mattermost-release.txt
+      id: set_branch_for_upgrade
+      if: steps.compare_release.outputs.new_release == 'true'
+      run: |
+        if [[ "${{ steps.get_release.outputs.latest_release }}" =~ v([0-9]+)\.([0-9]+)\.([0-9]+) ]]; then
+          major="${BASH_REMATCH[1]}"
+          minor="${BASH_REMATCH[2]}"
+          patch="${BASH_REMATCH[3]}"
+        fi
+        echo "::set-output name=branch_name::upgrade-$major.$minor"
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+        git checkout -b ${{ steps.set_branch_for_upgrade.outputs.branch_name }} || git checkout ${{ steps.set_branch_for_upgrade.outputs.branch_name }}
+        git add mattermost-release.txt
+        git commit -m "chore: Upgrade to ${{ steps.get_release.outputs.latest_release }}"
+        git push origin ${{ steps.set_branch_for_upgrade.outputs.branch_name }}      
+
+    - name: Create Pull Request
+      if: steps.compare_release.outputs.new_release == 'true'
+      uses: peter-evans/create-pull-request@v6
+      with:
+        token: ${{ secrets.GH_TOKEN }}
+        commit-message: "chore: Upgrade to ${{ steps.get_release.outputs.latest_release }}"
+        branch: ${{ steps.set_branch_for_upgrade.outputs.branch_name }}
+        title: Update files for new mattermost release ${{ steps.get_release.outputs.latest_release }}
+        labels: auto-upgrade
+        delete-branch: true
+        reviewers: remiheens
+        assignees: remiheens
