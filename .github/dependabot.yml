@@ -1,9 +1,24 @@
 version: 2
 updates:
-- package-ecosystem: maven
-  directory: "/dependabot"
-  schedule:
-    interval: daily
-    time: "00:15"
-  open-pull-requests-limit: 99
-  target-branch: main
+  - package-ecosystem: "github-actions"
+    # Workflow files stored in the default location of `.github/workflows`. (You don't need to specify `/.github/workflows` for `directory`. You can use `directory: "/"`.)
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  # Enable version updates for Docker
+  - package-ecosystem: "docker"
+    # Look for a `Dockerfile` in the `root` directory
+    directory: "/app"
+    # Check for updates once a week
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 99
+    target-branch: main
+  - package-ecosystem: "docker"
+    # Look for a `Dockerfile` in the `root` directory
+    directory: "/db"
+    # Check for updates once a week
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 99
+    target-branch: main
