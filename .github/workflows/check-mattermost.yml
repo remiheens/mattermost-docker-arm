@@ -32,6 +32,12 @@ jobs:
           echo "New release detected"
           sed -i "s/MATTERMOST_VERSION=(.*)/MATTERMOST_VERSION=${{ steps.get_release.outputs.latest_release }}/" mattermost-release.txt
           echo "::set-output name=new_release::true"
+          if [[ "${{ steps.get_release.outputs.latest_release }}" =~ v([0-9]+)\.([0-9]+)\.([0-9]+) ]]; then
+            major="${BASH_REMATCH[1]}"
+            minor="${BASH_REMATCH[2]}"
+            patch="${BASH_REMATCH[3]}"
+          fi
+          echo "::set-output name=branch_name::upgrade-$major.$minor"
         else
           echo "No new release"
           echo "::set-output name=new_release::false"
@@ -41,18 +47,12 @@ jobs:
       id: set_branch_for_upgrade
       if: steps.compare_release.outputs.new_release == 'true'
       run: |
-        if [[ "${{ steps.get_release.outputs.latest_release }}" =~ v([0-9]+)\.([0-9]+)\.([0-9]+) ]]; then
-          major="${BASH_REMATCH[1]}"
-          minor="${BASH_REMATCH[2]}"
-          patch="${BASH_REMATCH[3]}"
-        fi
-        echo "::set-output name=branch_name::upgrade-$major.$minor"
         git config --global user.name 'github-actions'
         git config --global user.email 'github-actions@github.com'
-        git checkout -b ${{ steps.set_branch_for_upgrade.outputs.branch_name }} || git checkout ${{ steps.set_branch_for_upgrade.outputs.branch_name }}
+        git checkout -b ${{ steps.compare_release.outputs.branch_name }} || git checkout ${{ steps.compare_release.outputs.branch_name }}
         git add mattermost-release.txt
         git commit -m "chore: Upgrade to ${{ steps.get_release.outputs.latest_release }}"
-        git push origin ${{ steps.set_branch_for_upgrade.outputs.branch_name }}      
+        git push origin ${{ steps.compare_release.outputs.branch_name }}      
 
     - name: Create Pull Request
       if: steps.compare_release.outputs.new_release == 'true'
