@@ -30,7 +30,7 @@ jobs:
 
         if [ "${{ steps.get_release.outputs.latest_release }}" != "$MATTERMOST_VERSION" ]; then
           echo "New release detected"
-          sed -i "s/MATTERMOST_VERSION=(.*)/MATTERMOST_VERSION=${{ steps.get_release.outputs.latest_release }}/" mattermost-release.txt
+          sed -i "s/MATTERMOST_VERSION=\(.*\)/MATTERMOST_VERSION=${{ steps.get_release.outputs.latest_release }}/" mattermost-release.txt
           echo "::set-output name=new_release::true"
           if [[ "${{ steps.get_release.outputs.latest_release }}" =~ v([0-9]+)\.([0-9]+)\.([0-9]+) ]]; then
             major="${BASH_REMATCH[1]}"
