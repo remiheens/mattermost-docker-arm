@@ -54,15 +54,19 @@ jobs:
         git commit -m "chore: Upgrade to ${{ env.LATEST_RELEASE }}"
         git push origin ${{ env.BRANCH_NAME }}
 
-    - name: Create Pull Request
+    - name: Create pull request via GitHub CLI
       if: env.NEW_RELEASE == 'true'
-      uses: peter-evans/create-pull-request@v6
-      with:
-        token: ${{ secrets.GH_TOKEN }}
-        commit-message: "chore: Upgrade to ${{ env.LATEST_RELEASE }}"
-        branch: ${{ env.BRANCH_NAME }}
-        title: Update files for new mattermost release ${{ env.LATEST_RELEASE }}
-        labels: auto-upgrade
-        delete-branch: true
-        reviewers: remiheens
-        assignees: remiheens
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      run: |
+        gh label list | grep -q auto-upgrade || gh label create auto-upgrade \
+          -c FABC7B \
+          -d "Pull requests that upgrade mattermost version automatically"
+        gh pr create \
+          --assignee @me \
+          --base main \
+          --body "" \
+          --head ${{ env.BRANCH_NAME }} \
+          --label auto-upgrade \
+          --reviewer remiheens \
+          --title "Update files for new mattermost release ${{ env.LATEST_RELEASE }}"
