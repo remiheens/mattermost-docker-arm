@@ -29,15 +29,26 @@ jobs:
         echo "Latest release: ${{ env.LATEST_RELEASE }}"
 
         if [ "${{ env.LATEST_RELEASE }}" != "$MATTERMOST_VERSION" ]; then
-          echo "New release detected"
-          sed -i "s/MATTERMOST_VERSION=\(.*\)/MATTERMOST_VERSION=${{ env.LATEST_RELEASE }}/" mattermost-release.txt
-          echo "NEW_RELEASE=true" >> $GITHUB_ENV
           if [[ "${{ env.LATEST_RELEASE }}" =~ v([0-9]+)\.([0-9]+)\.([0-9]+) ]]; then
             major="${BASH_REMATCH[1]}"
             minor="${BASH_REMATCH[2]}"
             patch="${BASH_REMATCH[3]}"
+  
+            echo "New release detected"
+
+            # If branch exists, do nothing
+            if git ls-remote --heads origin | grep -q "upgrade-$major.$minor"; then
+              echo "Branch upgrade-$major.$minor already exists"
+              echo "NEW_RELEASE=false" >> $GITHUB_ENV
+              exit 0
+            fi
+
+            # Branch DNE, update MATTERMOST_VERSION
+            sed -i "s/MATTERMOST_VERSION=\(.*\)/MATTERMOST_VERSION=${{ env.LATEST_RELEASE }}/" mattermost-release.txt
+
+            echo "BRANCH_NAME=upgrade-$major.$minor" >> $GITHUB_ENV
+            echo "NEW_RELEASE=true" >> $GITHUB_ENV
           fi
-          echo "BRANCH_NAME=upgrade-to-${major}.${minor}" >> $GITHUB_ENV
         else
           echo "No new release"
           echo "NEW_RELEASE=false" >> $GITHUB_ENV
