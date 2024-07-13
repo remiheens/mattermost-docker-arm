@@ -14,7 +14,7 @@ services:
   app:
     image: rheens/mattermost-app:v9.8.1
     ports:
-      - "127.0.0.1:8000:8000"
+      - 8000:8000
     build:
       context: app
       args:
