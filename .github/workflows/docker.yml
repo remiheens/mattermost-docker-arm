@@ -36,7 +36,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: "{{defaultContext}}:${{ matrix.image }}"
-          platforms: linux/arm,linux/arm64
+          platforms: linux/arm,linux/arm64, linux/amd64
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/mattermost-${{ matrix.image }}:${{ github.ref_name }}
           build-args: MM_VERSION=${{ github.ref_name }}
