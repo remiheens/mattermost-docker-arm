@@ -2,7 +2,7 @@ name: Check for new Mattermost Releases
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Vérifie toutes les jours à minuit
+    - cron: '0 0 * * *'  # Check every day at midnight
 
 jobs:
   check-releases:
@@ -79,5 +79,5 @@ jobs:
           --body "" \
           --head ${{ env.BRANCH_NAME }} \
           --label auto-upgrade \
-          --reviewer remiheens \
+          --reviewer al-lac \
           --title "Update files for new mattermost release ${{ env.LATEST_RELEASE }}"

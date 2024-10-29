@@ -1,20 +1,6 @@
-[![Docker Pulls](https://badgen.net/docker/pulls/rheens/mattermost-app?icon=docker&label=pulls)](https://hub.docker.com/r/rheens/mattermost-app)
-[![Docker Stars](https://badgen.net/docker/stars/rheens/mattermost-app?icon=docker&label=stars)](https://hub.docker.com/r/rheens/mattermost-app)
-![Github stars](https://badgen.net/github/stars/remiheens/mattermost-docker-arm?icon=github&label=stars)
-![Github forks](https://badgen.net/github/forks/remiheens/mattermost-docker-arm?icon=github&label=forks)
-![Github issues](https://img.shields.io/github/issues/remiheens/mattermost-docker-arm)
+# Mattermost server for ARM (V7 or 64) and AMD64
 
-# Mattermost server for ARM (V7 or 64)
-
-I found a GitHub repository who built tar.gz release with a sourcecode that ca be run on a ARMv7, but I've the needs to run in a docker container. 
-
-This repository contains a docker-compose.yml to run a mattermost stack onto a raspberry pi
-
-Or, you can find a bunch of script to build docker image based on https://github.com/mattermost/mattermost-server and build within GitHub Actions. 
-
-Frequently, I create new release and new docker image, so if I'm late, feel free to open a Pull Request.
-
-You just have to update ’dependabot/go.mod’ and ’.github/workflows/release.yml’
+Fork of the repo by [remiheens](https://github.com/remiheens) to also include support for AMD64.
 
 ## How to run
 
@@ -25,4 +11,5 @@ You just have to update ’dependabot/go.mod’ and ’.github/workflows/release
 
 # Credits 
 
+Forked from: https://github.com/remiheens/mattermost-docker-arm
 Original repository for source code : https://github.com/SmartHoneybee/ubiquitous-memory
