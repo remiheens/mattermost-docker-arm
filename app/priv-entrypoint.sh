@@ -6,4 +6,4 @@ for folder in "/mattermost/data" "/mattermost/logs" "/mattermost/config" "/matte
 done
 
 echo Dropping root and running mattermost entrypoint
-su mattermost -c "/entrypoint.sh $@"
+exec gosu mattermost /entrypoint.sh "$@"

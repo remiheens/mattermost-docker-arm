@@ -25,6 +25,7 @@ RUN apk add --no-cache \
 	netcat-openbsd \
 	xmlsec-dev \
 	tzdata \
+	gosu \
 	&& rm -rf /tmp/*
 
 # Get Mattermost
