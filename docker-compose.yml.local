@@ -13,6 +13,8 @@ services:
       - run.env
   app:
     image: rheens/mattermost-app:v9.8.1
+    ports:
+      - 8000:8000
     build:
       context: app
       args:
