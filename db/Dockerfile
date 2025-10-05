@@ -1,4 +1,4 @@
-FROM postgres:17-alpine
+FROM postgres:18-alpine
 
 ENV DEFAULT_TIMEZONE UTC
 # Mandatory nowdays with PG 10
