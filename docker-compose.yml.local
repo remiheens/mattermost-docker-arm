@@ -17,8 +17,8 @@ services:
       context: app
       args:
         - MM_VERSION=v9.8.1
-        - GOOS=linux
-        - GOARCH=arm64
+        - TARGETOS=linux
+        - TARGETARCH=arm64
     restart: unless-stopped
     volumes:
       - ./volumes/app/mattermost/config:/mattermost/config:rw
