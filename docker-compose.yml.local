@@ -2,21 +2,21 @@ version: "3"
 
 services:
   db:
-    image: rheens/mattermost-db:v9.8.1
+    image: rheens/mattermost-db:v11.1.0
     build:
       context: db
     restart: unless-stopped
     volumes:
-      - ./volumes/db/var/lib/postgresql/data:/var/lib/postgresql/data
+      - ./volumes/db/var/lib/postgresql:/var/lib/postgresql
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - run.env
   app:
-    image: rheens/mattermost-app:v9.8.1
+    image: rheens/mattermost-app:v11.1.0
     build:
       context: app
       args:
-        - MM_VERSION=v9.8.1
+        - MM_VERSION=v11.1.0
         - GOOS=linux
         - GOARCH=arm64
     restart: unless-stopped
