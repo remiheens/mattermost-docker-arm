@@ -10,7 +10,7 @@ on:
       - support-**
 
 env:
-  DEBIAN_RELEASE: bookworm
+  DEBIAN_RELEASE: trixie
   DOCKER_PWD: /root
   DOCKER_IMAGE: debian:${DEBIAN_RELEASE}
 

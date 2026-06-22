@@ -11,3 +11,12 @@ index faa027239..df40f0c68 100644
  	cp -RL fonts $(DIST_PATH)
  	cp -RL templates $(DIST_PATH)
  	rm -rf $(DIST_PATH)/templates/*.mjml $(DIST_PATH)/templates/partials/
+--- a/channels/app/platform/memory_linux.go
++++ b/channels/app/platform/memory_linux.go
+@@ -17,5 +17,5 @@
+ 		return 0, err
+ 	}
+ 	// Sysinfo returns memory in units of info.Unit bytes
+-	return info.Totalram * uint64(info.Unit), nil
++	return uint64(info.Totalram) * uint64(info.Unit), nil
+ }
