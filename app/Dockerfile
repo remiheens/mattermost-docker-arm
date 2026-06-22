@@ -1,4 +1,4 @@
-FROM alpine:3.23.3
+FROM alpine:3.24.1
 
 # Some ENV variables
 ENV PATH="/mattermost/bin:${PATH}"
