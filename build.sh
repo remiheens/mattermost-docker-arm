@@ -8,7 +8,7 @@ DEBIAN_RELEASE="${DEBIAN_RELEASE:-trixie}"
 # Mattermost version to build
 MATTERMOST_VERSION="${MATTERMOST_VERSION:-v5.26.0}"
 # golang version
-GO_VERSION="${GO_VERSION:-1.24.11}"
+GO_VERSION="${GO_VERSION:-1.26.3}"
 
 if [ "$(id -u)" -eq 0 ]; then # as root user
 	# create build user, if needed
