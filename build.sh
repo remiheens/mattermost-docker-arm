@@ -4,11 +4,11 @@ set -eux
 BUILD_USER_HOME="${BUILD_USER_HOME:-/build}"
 BUILD_USER_NAME="${BUILD_USER_NAME:-build}"
 # Debian release used during build
-DEBIAN_RELEASE="${DEBIAN_RELEASE:-bookworm}"
+DEBIAN_RELEASE="${DEBIAN_RELEASE:-trixie}"
 # Mattermost version to build
 MATTERMOST_VERSION="${MATTERMOST_VERSION:-v5.26.0}"
 # golang version
-GO_VERSION="${GO_VERSION:-1.20.8}"
+GO_VERSION="${GO_VERSION:-1.24.11}"
 
 if [ "$(id -u)" -eq 0 ]; then # as root user
 	# create build user, if needed
